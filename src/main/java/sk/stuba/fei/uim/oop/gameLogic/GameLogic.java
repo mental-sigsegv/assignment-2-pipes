@@ -2,6 +2,7 @@ package sk.stuba.fei.uim.oop.gameLogic;
 
 import sk.stuba.fei.uim.oop.board.Board;
 import sk.stuba.fei.uim.oop.board.Tile;
+import sk.stuba.fei.uim.oop.board.Type;
 import sk.stuba.fei.uim.oop.universalAdapter.UniversalAdapter;
 
 import javax.swing.*;
@@ -38,10 +39,23 @@ public class GameLogic extends UniversalAdapter {
 
         ((Tile) component).setHighlight(true);
         board.repaint();
+
     }
     @Override
     public void mouseExited(MouseEvent e) {
         board.clearHighlight();
         board.repaint();
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Component component = board.getComponentAt(e.getX(), e.getY());
+        if (!(component instanceof Tile)) {
+            return;
+        }
+        if (((Tile) component).getType().equals(Type.STRAIGHT_PIPE) || ((Tile) component).getType().equals(Type.CURVED_PIPE)) {
+            ((Tile) component).setRotation((((Tile) component).getRotation() + 90)%360);
+        }
+        ((Tile) component).repaint();
     }
 }
