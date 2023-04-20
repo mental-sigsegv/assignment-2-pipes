@@ -3,25 +3,39 @@ package sk.stuba.fei.uim.oop.board;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.List;
 import java.util.*;
 
 public class Board extends JPanel {
     private Tile[][] board;
     private int[][] boardVisited;
     private ArrayList<ArrayList<Integer>> test;
+    private ArrayList<Integer> startPos;
+    private ArrayList<Integer> endPos;
     private int boardSize;
-    private Tile start;
-    private Tile end;
     private boolean doSearch = true;
     public Board(int size) {
         boardSize = size;
         boardVisited = new int[size][size];
         test = new ArrayList<>();
 
+        startPos = new ArrayList<>();
+        endPos = new ArrayList<>();
+
         initBoard(boardSize);
-        initStart(boardSize-1, boardSize-1);
-        initEnd(0, 0);
+
+        int randomStart = (int) (Math.random() * boardSize);
+        int randomEnd = (int) (Math.random() * boardSize);
+        startPos.add(randomStart);
+        startPos.add(0);
+
+        endPos.add(randomEnd);
+        endPos.add(boardSize-1);
+
+        System.out.println("S: " + randomStart + " | E:" + randomEnd);
+
+        initStart(randomStart, 0);
+        initEnd(randomEnd, boardSize-1);
+
         initPath();
         updateBoard();
     }
@@ -35,7 +49,7 @@ public class Board extends JPanel {
             int yValueNext = test.get(i).get(1);
 
 
-            if ((xValue == 0 && yValue == 0) || (xValue == boardSize-1 && yValue == boardSize-1)) {
+            if ((xValue == startPos.get(0) && yValue == startPos.get(1)) || (xValue == endPos.get(0) && yValue == endPos.get(1))) {
                 continue;
             }
             else if ((i > 0 && i < test.size() - 1) && (!Objects.equals(test.get(i - 1).get(0), test.get(i + 1).get(0)) && !Objects.equals(test.get(i - 1).get(1), test.get(i + 1).get(1)))) {
@@ -54,11 +68,11 @@ public class Board extends JPanel {
             Arrays.fill(boardVisited[i], 1);
         }
 
-        dfs(boardSize-1, boardSize-1);
+        dfs(startPos.get(0), startPos.get(1));
 
         // Set start and end points
-        boardVisited[boardSize-1][boardSize-1] = 0;
-        boardVisited[0][0] = 0;
+        boardVisited[startPos.get(0)][startPos.get(1)] = 0;
+        boardVisited[endPos.get(0)][endPos.get(1)] = 0;
 
         for (ArrayList<Integer> a : test) {
             int x = a.get(0);
@@ -80,7 +94,7 @@ public class Board extends JPanel {
         tmp.add(c);
         test.add(tmp);
 
-        if (r == 0 && c == 0) {
+        if (r == endPos.get(0) && c == endPos.get(1)) {
             doSearch = false;
             return;
         }

@@ -35,9 +35,9 @@ public class Tile extends JPanel {
 
 
         if (type.equals(Type.START)) {
-            setBackground(Color.RED);
-        } else if (type.equals(Type.END)) {
             setBackground(Color.GREEN);
+        } else if (type.equals(Type.END)) {
+            setBackground(Color.RED);
         } else {
             setBackground(Color.WHITE);
         }
