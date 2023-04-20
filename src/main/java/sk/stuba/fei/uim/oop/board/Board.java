@@ -20,7 +20,7 @@ public class Board extends JPanel {
         test = new ArrayList<>();
 
         initBoard(boardSize);
-        initStart(7, 7);
+        initStart(boardSize-1, boardSize-1);
         initEnd(0, 0);
         initPath();
         updateBoard();
@@ -35,7 +35,7 @@ public class Board extends JPanel {
             int yValueNext = test.get(i).get(1);
 
 
-            if ((xValue == 0 && yValue == 0) || (xValue == 7 && yValue == 7)) {
+            if ((xValue == 0 && yValue == 0) || (xValue == boardSize-1 && yValue == boardSize-1)) {
                 continue;
             }
             else if ((i > 0 && i < test.size() - 1) && (!Objects.equals(test.get(i - 1).get(0), test.get(i + 1).get(0)) && !Objects.equals(test.get(i - 1).get(1), test.get(i + 1).get(1)))) {
@@ -54,10 +54,10 @@ public class Board extends JPanel {
             Arrays.fill(boardVisited[i], 1);
         }
 
-        dfs(7, 7);
+        dfs(boardSize-1, boardSize-1);
 
         // Set start and end points
-        boardVisited[7][7] = 0;
+        boardVisited[boardSize-1][boardSize-1] = 0;
         boardVisited[0][0] = 0;
 
         for (ArrayList<Integer> a : test) {
@@ -66,8 +66,8 @@ public class Board extends JPanel {
             boardVisited[x][y] = 0;
         }
 
-        for (int i=0; i < 8; i++) {
-            for (int j=0; j<8;j ++) {
+        for (int i=0; i < boardSize; i++) {
+            for (int j=0; j<boardSize;j ++) {
                 System.out.print(boardVisited[i][j]);
             }
             System.out.print("\n");
