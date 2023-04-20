@@ -80,11 +80,23 @@ public class GameLogic extends UniversalAdapter {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        gameRestart();
-        mainFrame.revalidate();
-        mainFrame.repaint();
-        mainFrame.setFocusable(true);
-        mainFrame.requestFocus();
+        String buttonName = ((JButton) e.getSource()).getText();
+        switch (buttonName) {
+            case "RESTART":
+                gameRestart();
+                mainFrame.revalidate();
+                mainFrame.repaint();
+                mainFrame.setFocusable(true);
+                mainFrame.requestFocus();
+                break;
+            case "CHECK":
+                System.out.println("Check");
+                break;
+            default:
+                System.out.println("Button name not found");
+        }
+
+
     }
 
 

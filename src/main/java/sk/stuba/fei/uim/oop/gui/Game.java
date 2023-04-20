@@ -19,11 +19,17 @@ public class Game {
 
         JPanel sideMenu = new JPanel();
         sideMenu.setBackground(Color.LIGHT_GRAY);
+
         JButton buttonRestart = new JButton("RESTART");
         buttonRestart.addActionListener(gameLogic);
         buttonRestart.setFocusable(false);
 
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, 6, 12, 6);
+        JButton buttonCheck = new JButton("CHECK");
+        buttonCheck.addActionListener(gameLogic);
+        buttonCheck.setFocusable(false);
+
+
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, 8, 16, 8);
         slider.setMinorTickSpacing(2);
         slider.setMajorTickSpacing(2);
         slider.setSnapToTicks(true);
@@ -31,8 +37,9 @@ public class Game {
         slider.setPaintLabels(true);
         slider.addChangeListener(gameLogic);
 
-        sideMenu.setLayout(new GridLayout(2, 2));
+        sideMenu.setLayout(new GridLayout(2, 4));
         sideMenu.add(buttonRestart);
+        sideMenu.add(buttonCheck);
         sideMenu.add(gameLogic.getBoardSizeLabel());
         sideMenu.add(slider);
         frame.add(sideMenu, BorderLayout.PAGE_START);

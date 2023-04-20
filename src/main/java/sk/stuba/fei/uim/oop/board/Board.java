@@ -65,20 +65,11 @@ public class Board extends JPanel {
             int y = a.get(1);
             boardVisited[x][y] = 0;
         }
-
-        for (int i=0; i < boardSize; i++) {
-            for (int j=0; j<boardSize;j ++) {
-                System.out.print(boardVisited[i][j]);
-            }
-            System.out.print("\n");
-        }
     }
 
     private void dfs(int r, int c) {
         // Mark cell as visited
         boardVisited[r][c] = 0;
-
-
 
         if (!doSearch) {
             return;
@@ -89,13 +80,10 @@ public class Board extends JPanel {
         tmp.add(c);
         test.add(tmp);
 
-
         if (r == 0 && c == 0) {
-            System.out.println("Search stop");
             doSearch = false;
             return;
         }
-
 
         // Define possible moves
         int[] rows = {-1, 0, 1, 0};
@@ -129,10 +117,7 @@ public class Board extends JPanel {
         }
         if (test.get(test.size() - 1).get(0) == r && test.get(test.size() - 1).get(1) == c) {
             test.remove(test.size() - 1);
-        } else {
-            System.out.println(r + " " + c);
         }
-
     }
 
     private void initBoard(int size) {
