@@ -43,7 +43,9 @@ public class Board extends JPanel {
             } else {
                 board[xValue][yValue].setType(Type.STRAIGHT_PIPE);
             }
-
+            int[] angleArray = {0, 90, 180, 270};
+            int randomRotation = angleArray[(int) (Math.random() * angleArray.length)];
+            board[xValue][yValue].setRotation((board[xValue][yValue].getRotation() + randomRotation)%360);
         }
     }
 
@@ -58,16 +60,10 @@ public class Board extends JPanel {
         boardVisited[7][7] = 0;
         boardVisited[0][0] = 0;
 
-
-
-        for (int i = 0; i < boardSize; i++) {
-            Arrays.fill(boardVisited[i], 0);
-        }
-
         for (ArrayList<Integer> a : test) {
             int x = a.get(0);
             int y = a.get(1);
-            boardVisited[x][y] = 1;
+            boardVisited[x][y] = 0;
         }
 
         for (int i=0; i < 8; i++) {
@@ -93,13 +89,12 @@ public class Board extends JPanel {
         tmp.add(c);
         test.add(tmp);
 
-        if (r == 0 && c == 0) {
 
+        if (r == 0 && c == 0) {
+            System.out.println("Search stop");
             doSearch = false;
             return;
         }
-
-
 
 
         // Define possible moves
@@ -110,7 +105,6 @@ public class Board extends JPanel {
         ArrayList<Integer> directions = new ArrayList<>(Arrays.asList(0, 1, 2, 3));
         Collections.shuffle(directions);
 
-        int counter = 0;
         // Visit all neighbors
         for (int direction : directions) {
             int rr = r + rows[direction];
@@ -120,7 +114,6 @@ public class Board extends JPanel {
                 continue;
             }
 
-            counter++;
             // Mark path between current cell and neighbor
             if (direction == 0) {
                 boardVisited[r-1][c] = 0;
@@ -134,9 +127,12 @@ public class Board extends JPanel {
 
             dfs(rr, cc);
         }
-        if (counter == 0) {
+        if (test.get(test.size() - 1).get(0) == r && test.get(test.size() - 1).get(1) == c) {
             test.remove(test.size() - 1);
+        } else {
+            System.out.println(r + " " + c);
         }
+
     }
 
     private void initBoard(int size) {

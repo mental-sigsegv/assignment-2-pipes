@@ -48,7 +48,7 @@ public class GameLogic extends UniversalAdapter {
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mousePressed(MouseEvent e) {
         Component component = board.getComponentAt(e.getX(), e.getY());
         if (!(component instanceof Tile)) {
             return;
@@ -56,6 +56,17 @@ public class GameLogic extends UniversalAdapter {
         if (((Tile) component).getType().equals(Type.STRAIGHT_PIPE) || ((Tile) component).getType().equals(Type.CURVED_PIPE)) {
             ((Tile) component).setRotation((((Tile) component).getRotation() + 90)%360);
         }
+        ((Tile) component).setHighlight(true);
+        ((Tile) component).repaint();
+    }
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Component component = board.getComponentAt(e.getX(), e.getY());
+        if (!(component instanceof Tile)) {
+            return;
+        }
+
+        ((Tile) component).setHighlight(true);
         ((Tile) component).repaint();
     }
 }
