@@ -45,11 +45,11 @@ public class Board extends JPanel {
             int xValue = test.get(i).get(0);
             int yValue = test.get(i).get(1);
 
-            int xValueNext = test.get(i).get(0);
-            int yValueNext = test.get(i).get(1);
-
+            int[] angleArray = {0, 90, 180, 270};
+            int randomRotation = angleArray[(int) (Math.random() * angleArray.length)];
 
             if ((xValue == startPos.get(0) && yValue == startPos.get(1)) || (xValue == endPos.get(0) && yValue == endPos.get(1))) {
+                board[xValue][yValue].setRotation((board[xValue][yValue].getRotation() + randomRotation)%360);
                 continue;
             }
             else if ((i > 0 && i < test.size() - 1) && (!Objects.equals(test.get(i - 1).get(0), test.get(i + 1).get(0)) && !Objects.equals(test.get(i - 1).get(1), test.get(i + 1).get(1)))) {
@@ -57,8 +57,6 @@ public class Board extends JPanel {
             } else {
                 board[xValue][yValue].setType(Type.STRAIGHT_PIPE);
             }
-            int[] angleArray = {0, 90, 180, 270};
-            int randomRotation = angleArray[(int) (Math.random() * angleArray.length)];
             board[xValue][yValue].setRotation((board[xValue][yValue].getRotation() + randomRotation)%360);
         }
     }

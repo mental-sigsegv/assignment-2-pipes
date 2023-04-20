@@ -19,6 +19,10 @@ public class Tile extends JPanel {
     private Type type;
     @Setter @Getter
     private double rotation = 0.0;
+    @Getter
+    private Direction entry;
+    @Getter
+    private Direction exit;
     private final LineBorder defaultBorder;
     private final LineBorder highlightBorder;
     public Tile() {
@@ -26,7 +30,8 @@ public class Tile extends JPanel {
         highlightBorder = new LineBorder(Color.RED, 2);
         type = Type.STRAIGHT_PIPE;
         highlight = false;
-
+        entry = Direction.DOWN;
+        exit = Direction.RIGHT;
     }
 
     public void paintComponent(Graphics g) {
@@ -47,12 +52,25 @@ public class Tile extends JPanel {
         Dimension size = getSize();
         if (type.equals(Type.STRAIGHT_PIPE)) {
             shape = new Rectangle2D.Double(0, size.height / 2 - 1, size.width, 3);
+            entry = Direction.LEFT;
+            exit = Direction.RIGHT;
         } else if (type.equals(Type.CURVED_PIPE)) {
             shape = new Rectangle2D.Double( size.width/2, size.height / 2 - 1, size.width, 3);
             Rectangle2D tmp = new Rectangle2D.Double( size.width/2 - 1, size.width/2 + 1, 3, size.height / 2);
             shape.add(tmp);
+            entry = Direction.DOWN;
+            exit = Direction.RIGHT;
+        } else if (type.equals(Type.END) || type.equals(Type.START)) {
+            shape = new Rectangle2D.Double( size.width/2, size.height / 2 - 1, size.width, 3);
+            exit = Direction.RIGHT;
+            entry = Direction.RIGHT;
         }
         transform.rotate(Math.toRadians(rotation),  (double) getWidth() /2, (double) getHeight() /2);
+//        System.out.println(entry);
+//        System.out.println((entry.ordinal() + (int) rotation/90)%Direction.values().length);
+        entry = Direction.values()[(entry.ordinal() + 1 + (int) rotation/90)%Direction.values().length];
+        exit = Direction.values()[(exit.ordinal() + 1 + (int) rotation/90)%Direction.values().length];
+
         Shape s = transform.createTransformedShape(shape);
         g2d.draw(s);
 

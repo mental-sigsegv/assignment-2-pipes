@@ -3,6 +3,7 @@ package sk.stuba.fei.uim.oop.gameLogic;
 import lombok.Getter;
 import lombok.Setter;
 import sk.stuba.fei.uim.oop.board.Board;
+import sk.stuba.fei.uim.oop.board.Direction;
 import sk.stuba.fei.uim.oop.board.Tile;
 import sk.stuba.fei.uim.oop.board.Type;
 import sk.stuba.fei.uim.oop.universalAdapter.UniversalAdapter;
@@ -61,11 +62,16 @@ public class GameLogic extends UniversalAdapter {
         if (!(component instanceof Tile)) {
             return;
         }
-        if (((Tile) component).getType().equals(Type.STRAIGHT_PIPE) || ((Tile) component).getType().equals(Type.CURVED_PIPE)) {
-            ((Tile) component).setRotation((((Tile) component).getRotation() + 90)%360);
-        }
+
+        ((Tile) component).setRotation((((Tile) component).getRotation() + 90)%360);
         ((Tile) component).setHighlight(true);
         ((Tile) component).repaint();
+
+
+        Direction dEntry = ((Tile) component).getEntry();
+        Direction dExit = ((Tile) component).getExit();
+
+        System.out.println("Entry " + dEntry + " | Exit " + dExit);
     }
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -84,13 +90,9 @@ public class GameLogic extends UniversalAdapter {
         switch (buttonName) {
             case "RESTART":
                 gameRestart();
-                mainFrame.revalidate();
-                mainFrame.repaint();
-                mainFrame.setFocusable(true);
-                mainFrame.requestFocus();
                 break;
             case "CHECK":
-                System.out.println("Check");
+                check();
                 break;
             default:
                 System.out.println("Button name not found");
@@ -99,6 +101,9 @@ public class GameLogic extends UniversalAdapter {
 
     }
 
+    private void check() {
+
+    }
 
     private void updateBoardSizeLabel() {
         boardSizeLabel.setText("CURRENT BOARD SIZE: " + boardSize);
@@ -110,6 +115,11 @@ public class GameLogic extends UniversalAdapter {
         mainFrame.remove(board);
         initializeNewBoard(boardSize);
         mainFrame.add(board);
+
+        mainFrame.revalidate();
+        mainFrame.repaint();
+        mainFrame.setFocusable(true);
+        mainFrame.requestFocus();
     }
 
     private void initializeNewBoard(int dimension) {
@@ -123,9 +133,5 @@ public class GameLogic extends UniversalAdapter {
         boardSize = ((JSlider) e.getSource()).getValue();
         updateBoardSizeLabel();
         gameRestart();
-        mainFrame.setFocusable(true);
-        mainFrame.requestFocus();
-        mainFrame.revalidate();
-        mainFrame.repaint();
     }
 }
