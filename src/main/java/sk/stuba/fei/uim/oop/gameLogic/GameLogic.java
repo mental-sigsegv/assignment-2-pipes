@@ -43,7 +43,7 @@ public class GameLogic extends UniversalAdapter {
         board = new Board(size);
         boardSize = size;
         boardSizeLabel = new JLabel();
-        level = 0;
+        level = 1;
         levelLabel = new JLabel(Integer.toString(level));
         updateBoardSizeLabel();
         updateLevelLabel();
@@ -89,8 +89,6 @@ public class GameLogic extends UniversalAdapter {
 
         ((Tile) component).setHighlight(true);
         ((Tile) component).repaint();
-
-        System.out.println(((Tile) component).getExit());
     }
 
     @Override
@@ -102,24 +100,27 @@ public class GameLogic extends UniversalAdapter {
                 gameRestart();
                 break;
             case "CHECK":
-                if (check()) {
-                    incLevel();
-                    gameRestart();
-                } else {
-                    board.repaint();
-
-                    Timer timer = new Timer(1000, s -> {
-                        clearWater();
-                    });
-                    timer.setRepeats(false);
-                    timer.start();
-                    break;
-                }
+                checkFun();
+                break;
             default:
                 System.out.println("Button name not found");
         }
 
 
+    }
+    private void checkFun() {
+        if (check()) {
+            incLevel();
+            gameRestart();
+        } else {
+            board.repaint();
+
+            Timer timer = new Timer(1000, s -> {
+                clearWater();
+            });
+            timer.setRepeats(false);
+            timer.start();
+        }
     }
     private void clearWater() {
         for (int i=0; i<boardSize; i++) {
@@ -140,10 +141,8 @@ public class GameLogic extends UniversalAdapter {
         int nextTileX = tileX;
         int nextTileY = tileY;
 
-        // TODO : remove system out print
         while (true) {
             if ((tile.getEntry() == tile.getExit()) && (tileX != board.getStartPos().get(0) || tileY != board.getStartPos().get(1))) {
-                System.out.println("Path found");
                 return true;
             }
 
@@ -162,23 +161,18 @@ public class GameLogic extends UniversalAdapter {
                     break;
             }
             if (nextTileX < 0 || nextTileY < 0 || nextTileX >= boardSize || nextTileY >= boardSize) {
-                System.out.println("Path out of board. 404 not found");
                 return false;
             }
 
             nextTile = board.getBoard()[nextTileX][nextTileY];
 
             if (nextTile.getType() == Type.EMPTY) {
-                System.out.println("Empty tile");
                 return false;
             }
 
             Direction nextTileOppositeEntry = Direction.values()[(nextTile.getEntry().ordinal() + 2)%(Direction.values().length-1)];
             Direction nextTileOppositeExit = Direction.values()[(nextTile.getExit().ordinal() + 2)%(Direction.values().length-1)];
             if (tile.getExit() != nextTileOppositeEntry && tile.getExit() != nextTileOppositeExit) {
-                System.out.println(tile.getExit());
-                System.out.println(nextTile.getEntry() + " " + nextTile.getExit());
-                System.out.println("Wrong pipe / wall");
                 return false;
             } else if (tile.getExit() == nextTileOppositeExit) {
                 nextTile.swapEntryExit();
@@ -222,5 +216,19 @@ public class GameLogic extends UniversalAdapter {
         boardSize = ((JSlider) e.getSource()).getValue();
         updateBoardSizeLabel();
         gameRestart();
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_R:
+                gameRestart();
+                break;
+            case KeyEvent.VK_ENTER:
+                checkFun();
+                break;
+            case KeyEvent.VK_ESCAPE:
+                mainFrame.dispose();
+        }
     }
 }

@@ -148,6 +148,7 @@ public class Board extends JPanel {
             for (int column = 0; column < size; column++) {
                 board[row][column] = new Tile();
                 board[row][column].setType(Type.EMPTY);
+                board[row][column].setPreferredSize(new Dimension(64, 64));
                 add(board[row][column]);
             }
         }
