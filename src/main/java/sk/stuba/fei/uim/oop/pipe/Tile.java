@@ -10,9 +10,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
-import sk.stuba.fei.uim.oop.board.Compound;
 import sk.stuba.fei.uim.oop.board.Direction;
-import sk.stuba.fei.uim.oop.board.Type;
 
 public abstract class Tile extends JPanel {
     @Setter
@@ -20,7 +18,7 @@ public abstract class Tile extends JPanel {
     @Setter @Getter
     private Type type;
     @Setter
-    protected Compound compound;
+    protected State state;
     @Setter @Getter
     protected double rotation;
     @Getter @Setter
@@ -36,7 +34,7 @@ public abstract class Tile extends JPanel {
     protected AffineTransform transform;
     public Tile() {
         type = Type.EMPTY;
-        compound = Compound.AIR;
+        state = State.AIR;
         highlight = false;
 
 

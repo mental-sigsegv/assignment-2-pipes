@@ -1,8 +1,6 @@
 package sk.stuba.fei.uim.oop.pipe;
 
-import sk.stuba.fei.uim.oop.board.Compound;
 import sk.stuba.fei.uim.oop.board.Direction;
-import sk.stuba.fei.uim.oop.board.Type;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -23,7 +21,7 @@ public class StraightPipe extends Tile {
         rect = new Rectangle2D.Double(0, size.height / 2.0 - 20, size.width, 40);
         Shape s = transform.createTransformedShape(rect);
 
-        if (compound.equals(Compound.WATER)) {
+        if (state.equals(State.WATER)) {
             g2d.setColor(new Color(153, 217, 234));
         } else {
             g2d.setColor(Color.WHITE);

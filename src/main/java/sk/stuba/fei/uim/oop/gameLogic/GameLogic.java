@@ -2,7 +2,9 @@ package sk.stuba.fei.uim.oop.gameLogic;
 
 import lombok.Getter;
 import sk.stuba.fei.uim.oop.board.*;
+import sk.stuba.fei.uim.oop.pipe.State;
 import sk.stuba.fei.uim.oop.pipe.Tile;
+import sk.stuba.fei.uim.oop.pipe.Type;
 import sk.stuba.fei.uim.oop.universalAdapter.UniversalAdapter;
 
 import javax.swing.*;
@@ -56,7 +58,7 @@ public class GameLogic extends UniversalAdapter {
     private void clearWater() {
         for (int i=0; i<boardSize; i++) {
             for (int j=0; j<boardSize; j++) {
-                board.getBoard()[i][j].setCompound(Compound.AIR);
+                board.getBoard()[i][j].setState(State.AIR);
             }
         }
         board.validate();
@@ -110,7 +112,7 @@ public class GameLogic extends UniversalAdapter {
                 nextTile.swapEntryExit();
             }
 
-            nextTile.setCompound(Compound.WATER);
+            nextTile.setState(State.WATER);
 
             tile = nextTile;
             tileX = nextTileX;

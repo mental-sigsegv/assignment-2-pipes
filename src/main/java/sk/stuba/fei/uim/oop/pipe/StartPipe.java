@@ -1,7 +1,6 @@
 package sk.stuba.fei.uim.oop.pipe;
 
 import sk.stuba.fei.uim.oop.board.Direction;
-import sk.stuba.fei.uim.oop.board.Type;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;

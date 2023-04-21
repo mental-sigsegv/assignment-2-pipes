@@ -1,8 +1,6 @@
 package sk.stuba.fei.uim.oop.pipe;
 
-import sk.stuba.fei.uim.oop.board.Compound;
 import sk.stuba.fei.uim.oop.board.Direction;
-import sk.stuba.fei.uim.oop.board.Type;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -26,7 +24,7 @@ public class CurvedPipe extends Tile {
         Shape shape = transform.createTransformedShape(rect);
         Shape shape1 = transform.createTransformedShape(rectTmp);
 
-        if (compound.equals(Compound.WATER)) {
+        if (state.equals(State.WATER)) {
             g2d.setColor(new Color(153, 217, 234));
         } else {
             g2d.setColor(Color.WHITE);
