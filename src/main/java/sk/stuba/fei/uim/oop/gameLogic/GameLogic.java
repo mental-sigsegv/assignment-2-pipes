@@ -20,17 +20,33 @@ public class GameLogic extends UniversalAdapter {
     private int boardSize;
     @Getter
     private JLabel boardSizeLabel;
+    @Getter
+    private JLabel levelLabel;
+    private int level;
     private JFrame mainFrame;
     public GameLogic(JFrame mainFrame) {
         this.mainFrame = mainFrame;
         initBoard(8);
     }
 
+    private void updateLevelLabel() {
+        levelLabel.setText("CURRENT BOARD LEVEL: " + level);
+        mainFrame.revalidate();
+        mainFrame.repaint();
+    }
+    private void incLevel() {
+        level++;
+        updateLevelLabel();
+    }
+
     private void initBoard(int size) {
         board = new Board(size);
         boardSize = size;
         boardSizeLabel = new JLabel();
+        level = 0;
+        levelLabel = new JLabel(Integer.toString(level));
         updateBoardSizeLabel();
+        updateLevelLabel();
         board.addMouseListener(this);
         board.addMouseMotionListener(this);
         mainFrame.add(board);
@@ -86,15 +102,19 @@ public class GameLogic extends UniversalAdapter {
                 gameRestart();
                 break;
             case "CHECK":
-                check();
-                board.repaint();
+                if (check()) {
+                    incLevel();
+                    gameRestart();
+                } else {
+                    board.repaint();
 
-                Timer timer = new Timer(1000, s -> {
-                    clearWater();
-                });
-                timer.setRepeats(false);
-                timer.start();
-                break;
+                    Timer timer = new Timer(1000, s -> {
+                        clearWater();
+                    });
+                    timer.setRepeats(false);
+                    timer.start();
+                    break;
+                }
             default:
                 System.out.println("Button name not found");
         }
@@ -112,7 +132,7 @@ public class GameLogic extends UniversalAdapter {
     }
 
     // TODO : implement better way of showing water path (just background is not clearly visible)
-    private void check() {
+    private boolean check() {
         int tileX = board.getStartPos().get(0);
         int tileY = board.getStartPos().get(1);
         Tile tile = board.getBoard()[tileX][tileY];
@@ -122,9 +142,9 @@ public class GameLogic extends UniversalAdapter {
 
         // TODO : remove system out print
         while (true) {
-            if ((tile.getEntry() == tile.getExit()) && tileX != board.getStartPos().get(0) && tileY != board.getStartPos().get(1)) {
+            if ((tile.getEntry() == tile.getExit()) && (tileX != board.getStartPos().get(0) || tileY != board.getStartPos().get(1))) {
                 System.out.println("Path found");
-                break;
+                return true;
             }
 
             switch (tile.getExit()) {
@@ -143,14 +163,14 @@ public class GameLogic extends UniversalAdapter {
             }
             if (nextTileX < 0 || nextTileY < 0 || nextTileX >= boardSize || nextTileY >= boardSize) {
                 System.out.println("Path out of board. 404 not found");
-                break;
+                return false;
             }
 
             nextTile = board.getBoard()[nextTileX][nextTileY];
 
             if (nextTile.getType() == Type.EMPTY) {
                 System.out.println("Empty tile");
-                break;
+                return false;
             }
 
             Direction nextTileOppositeEntry = Direction.values()[(nextTile.getEntry().ordinal() + 2)%(Direction.values().length-1)];
@@ -159,7 +179,7 @@ public class GameLogic extends UniversalAdapter {
                 System.out.println(tile.getExit());
                 System.out.println(nextTile.getEntry() + " " + nextTile.getExit());
                 System.out.println("Wrong pipe / wall");
-                break;
+                return false;
             } else if (tile.getExit() == nextTileOppositeExit) {
                 nextTile.swapEntryExit();
             }
@@ -170,6 +190,8 @@ public class GameLogic extends UniversalAdapter {
             tileX = nextTileX;
             tileY = nextTileY;
         }
+
+
     }
 
     private void updateBoardSizeLabel() {

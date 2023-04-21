@@ -39,9 +39,11 @@ public class Game {
 
         sideMenu.setLayout(new GridLayout(2, 4, 1, 1));
         sideMenu.add(buttonRestart);
-        sideMenu.add(buttonCheck);
         sideMenu.add(gameLogic.getBoardSizeLabel());
         sideMenu.add(slider);
+        sideMenu.add(buttonCheck);
+        sideMenu.add(gameLogic.getLevelLabel());
+
         frame.add(sideMenu, BorderLayout.PAGE_START);
 
         frame.setVisible(true);
