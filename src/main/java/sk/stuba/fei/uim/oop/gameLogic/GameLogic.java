@@ -2,7 +2,7 @@ package sk.stuba.fei.uim.oop.gameLogic;
 
 import lombok.Getter;
 import sk.stuba.fei.uim.oop.board.*;
-import sk.stuba.fei.uim.oop.pipe.Pipe;
+import sk.stuba.fei.uim.oop.pipe.Tile;
 import sk.stuba.fei.uim.oop.universalAdapter.UniversalAdapter;
 
 import javax.swing.*;
@@ -12,6 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import static sk.stuba.fei.uim.oop.gui.Game.CHECK;
+import static sk.stuba.fei.uim.oop.gui.Game.RESET;
+
 public class GameLogic extends UniversalAdapter {
     private Board board;
     private int boardSize;
@@ -20,101 +23,32 @@ public class GameLogic extends UniversalAdapter {
     @Getter
     private JLabel levelLabel;
     private int level;
-    private JFrame mainFrame;
+    private final JFrame mainFrame;
     public GameLogic(JFrame mainFrame) {
         this.mainFrame = mainFrame;
-        initBoard(8);
+        initBoard();
     }
-
-    private void updateLevelLabel() {
-        levelLabel.setText("CURRENT BOARD LEVEL: " + level);
-        mainFrame.revalidate();
-        mainFrame.repaint();
-    }
-    private void incLevel() {
-        level++;
-        updateLevelLabel();
-    }
-
-    private void initBoard(int size) {
-        board = new Board(size);
-        boardSize = size;
+    private void initBoard() {
+        board = new Board(8);
+        boardSize = 8;
         boardSizeLabel = new JLabel();
         level = 1;
         levelLabel = new JLabel(Integer.toString(level));
-        updateBoardSizeLabel();
-        updateLevelLabel();
         board.addMouseListener(this);
         board.addMouseMotionListener(this);
         mainFrame.add(board);
+
+        updateBoardSizeLabel();
+        updateLevelLabel();
     }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        Component component = board.getComponentAt(e.getX(), e.getY());
-        if (!(component instanceof Pipe)) {
-            return;
-        }
-
-        ((Pipe) component).setHighlight(true);
-        board.repaint();
-
-    }
-    @Override
-    public void mouseExited(MouseEvent e) {
-        board.clearHighlight();
-        board.repaint();
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        Component component = board.getComponentAt(e.getX(), e.getY());
-        if (!(component instanceof Pipe)) {
-            return;
-        }
-
-        ((Pipe) component).setRotation((((Pipe) component).getRotation() + 90)%360);
-        ((Pipe) component).setHighlight(true);
-        ((Pipe) component).repaint();
-    }
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        Component component = board.getComponentAt(e.getX(), e.getY());
-        if (!(component instanceof Pipe)) {
-            return;
-        }
-
-        ((Pipe) component).setHighlight(true);
-        ((Pipe) component).repaint();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String buttonName = ((JButton) e.getSource()).getText();
-        switch (buttonName) {
-            // TODO : replace string with static attributes
-            case "RESTART":
-                gameRestart();
-                break;
-            case "CHECK":
-                checkFun();
-                break;
-            default:
-                System.out.println("Button name not found");
-        }
-
-
-    }
-    private void checkFun() {
-        if (check()) {
+    private void check() {
+        if (checkPath()) {
             incLevel();
             gameRestart();
         } else {
             board.repaint();
 
-            Timer timer = new Timer(1000, s -> {
-                clearWater();
-            });
+            Timer timer = new Timer(1000, s -> clearWater());
             timer.setRepeats(false);
             timer.start();
         }
@@ -128,22 +62,21 @@ public class GameLogic extends UniversalAdapter {
         board.validate();
         board.repaint();
     }
-
-    // TODO : implement better way of showing water path (just background is not clearly visible)
-    private boolean check() {
+    private boolean checkPath() {
         int tileX = board.getStartPos().get(0);
         int tileY = board.getStartPos().get(1);
-        Pipe pipe = board.getBoard()[tileX][tileY];
-        Pipe nextPipe;
+        Tile tile = board.getBoard()[tileX][tileY];
+
         int nextTileX = tileX;
         int nextTileY = tileY;
+        Tile nextTile;
 
         while (true) {
-            if ((pipe.getEntry() == pipe.getExit()) && (tileX != board.getStartPos().get(0) || tileY != board.getStartPos().get(1))) {
+            if ((tile.getEntry() == tile.getExit()) && (tileX != board.getStartPos().get(0) || tileY != board.getStartPos().get(1))) {
                 return true;
             }
 
-            switch (pipe.getExit()) {
+            switch (tile.getExit()) {
                 case LEFT:
                     nextTileY = tileY - 1;
                     break;
@@ -157,40 +90,40 @@ public class GameLogic extends UniversalAdapter {
                     nextTileX = tileX + 1;
                     break;
             }
+
             if (nextTileX < 0 || nextTileY < 0 || nextTileX >= boardSize || nextTileY >= boardSize) {
                 return false;
             }
 
-            nextPipe = board.getBoard()[nextTileX][nextTileY];
+            nextTile = board.getBoard()[nextTileX][nextTileY];
 
-            if (nextPipe.getType() == Type.EMPTY) {
+            if (nextTile.getType() == Type.EMPTY) {
                 return false;
             }
 
-            Direction nextTileOppositeEntry = Direction.values()[(nextPipe.getEntry().ordinal() + 2)%(Direction.values().length-1)];
-            Direction nextTileOppositeExit = Direction.values()[(nextPipe.getExit().ordinal() + 2)%(Direction.values().length-1)];
-            if (pipe.getExit() != nextTileOppositeEntry && pipe.getExit() != nextTileOppositeExit) {
+            Direction nextTileOppositeEntry = Direction.values()[(nextTile.getEntry().ordinal() + 2)%(Direction.values().length-1)];
+            Direction nextTileOppositeExit = Direction.values()[(nextTile.getExit().ordinal() + 2)%(Direction.values().length-1)];
+
+            if (tile.getExit() != nextTileOppositeEntry && tile.getExit() != nextTileOppositeExit) {
                 return false;
-            } else if (pipe.getExit() == nextTileOppositeExit) {
-                nextPipe.swapEntryExit();
+            } else if (tile.getExit() == nextTileOppositeExit) {
+                nextTile.swapEntryExit();
             }
 
-            nextPipe.setCompound(Compound.WATER);
+            nextTile.setCompound(Compound.WATER);
 
-            pipe = nextPipe;
+            tile = nextTile;
             tileX = nextTileX;
             tileY = nextTileY;
         }
-
-
     }
-
     private void updateBoardSizeLabel() {
         boardSizeLabel.setText("CURRENT BOARD SIZE: " + boardSize);
+        boardSizeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        boardSizeLabel.setVerticalAlignment(SwingConstants.CENTER);
         mainFrame.revalidate();
         mainFrame.repaint();
     }
-
     private void gameRestart() {
         mainFrame.remove(board);
         initializeNewBoard(boardSize);
@@ -201,20 +134,28 @@ public class GameLogic extends UniversalAdapter {
         mainFrame.setFocusable(true);
         mainFrame.requestFocus();
     }
-
     private void initializeNewBoard(int dimension) {
         board = new Board(dimension);
         board.addMouseMotionListener(this);
         board.addMouseListener(this);
     }
-
+    private void updateLevelLabel() {
+        levelLabel.setText("CURRENT BOARD LEVEL: " + level);
+        levelLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        levelLabel.setVerticalAlignment(SwingConstants.CENTER);
+        mainFrame.revalidate();
+        mainFrame.repaint();
+    }
+    private void incLevel() {
+        level++;
+        updateLevelLabel();
+    }
     @Override
     public void stateChanged(ChangeEvent e) {
         boardSize = ((JSlider) e.getSource()).getValue();
         updateBoardSizeLabel();
         gameRestart();
     }
-
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
@@ -222,10 +163,57 @@ public class GameLogic extends UniversalAdapter {
                 gameRestart();
                 break;
             case KeyEvent.VK_ENTER:
-                checkFun();
+                check();
                 break;
             case KeyEvent.VK_ESCAPE:
                 mainFrame.dispose();
+        }
+    }
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        Component component = board.getComponentAt(e.getX(), e.getY());
+        if (!(component instanceof Tile)) {
+            return;
+        }
+
+        ((Tile) component).setHighlight(true);
+        board.repaint();
+    }
+    @Override
+    public void mouseExited(MouseEvent e) {
+        board.clearHighlight();
+        board.repaint();
+    }
+    @Override
+    public void mousePressed(MouseEvent e) {
+        Component component = board.getComponentAt(e.getX(), e.getY());
+        if (!(component instanceof Tile)) {
+            return;
+        }
+
+        ((Tile) component).setRotation((((Tile) component).getRotation() + 90)%360);
+        ((Tile) component).setHighlight(true);
+        component.repaint();
+    }
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Component component = board.getComponentAt(e.getX(), e.getY());
+        if (!(component instanceof Tile)) {
+            return;
+        }
+
+        ((Tile) component).setHighlight(true);
+        component.repaint();
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String buttonName = ((JButton) e.getSource()).getText();
+        switch (buttonName) {
+            case RESET:
+                gameRestart();
+                break;
+            case CHECK:
+                check();
         }
     }
 }

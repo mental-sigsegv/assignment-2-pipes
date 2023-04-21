@@ -14,7 +14,7 @@ import sk.stuba.fei.uim.oop.board.Compound;
 import sk.stuba.fei.uim.oop.board.Direction;
 import sk.stuba.fei.uim.oop.board.Type;
 
-public class Pipe extends JPanel {
+public abstract class Tile extends JPanel {
     @Setter
     private boolean highlight;
     @Setter @Getter
@@ -22,44 +22,40 @@ public class Pipe extends JPanel {
     @Setter
     private Compound compound;
     @Setter @Getter
-    private double rotation = 0.0;
-    @Getter
+    private double rotation;
+    @Getter @Setter
     private Direction entry;
-    @Getter
+    @Getter @Setter
     private Direction exit;
     @Getter
-    private ArrayList<Direction> directions;
-    private final LineBorder defaultBorder;
-    private final LineBorder highlightBorder;
-    public Pipe() {
+    private ArrayList<Direction> pipeEntrances;
+    private LineBorder defaultBorder;
+    private LineBorder highlightBorder;
+    public Tile() {
+        type = Type.EMPTY;
+        compound = Compound.AIR;
+        highlight = false;
+
+        initBorders();
+        initEntrances();
+    }
+    private void initBorders() {
         defaultBorder = new LineBorder(Color.BLACK, 2);
         highlightBorder = new LineBorder(Color.RED, 2);
-        type = Type.STRAIGHT_PIPE;
-        highlight = false;
+    }
+    private void initEntrances() {
         entry = Direction.EMPTY;
         exit = Direction.EMPTY;
 
-        compound = Compound.AIR;
-
-        directions = new ArrayList<>();
-        directions.add(entry);
-        directions.add(exit);
-        setPreferredSize(new Dimension(64, 64));
+        pipeEntrances = new ArrayList<>();
+        pipeEntrances.add(entry);
+        pipeEntrances.add(exit);
     }
-
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         Graphics2D g2d = (Graphics2D) g;
-
-
-        if (type.equals(Type.START)) {
-            setBackground(Color.GREEN);
-        } else if (type.equals(Type.END)) {
-            setBackground(Color.RED);
-        } else {
-            setBackground(Color.WHITE);
-        }
 
         // TODO : divide pipes into subclasses with proper pain method and override entry/end attribute
         AffineTransform transform = new AffineTransform();

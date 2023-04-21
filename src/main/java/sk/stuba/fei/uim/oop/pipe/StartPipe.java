@@ -1,9 +1,14 @@
 package sk.stuba.fei.uim.oop.pipe;
 
+import sk.stuba.fei.uim.oop.board.Type;
+
 import java.awt.*;
 
-public class StartPipe extends Pipe {
+public class StartPipe extends Tile {
     public StartPipe() {
-        setBackground(Color.BLUE);
+        super();
+        setBackground(Color.GREEN);
+        setType(Type.START);
+        repaint();
     }
 }

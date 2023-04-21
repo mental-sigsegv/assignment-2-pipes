@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Game {
+    public static final String RESET = "RESTART";
+    public static final String CHECK = "CHECK";
     public Game() {
         JFrame frame = new JFrame("Water pipes");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -17,17 +19,16 @@ public class Game {
         GameLogic gameLogic = new GameLogic(frame);
         frame.addKeyListener(gameLogic);
 
-        JPanel sideMenu = new JPanel();
-        sideMenu.setBackground(Color.LIGHT_GRAY);
+        JPanel menu = new JPanel();
+        menu.setBackground(Color.WHITE);
 
-        JButton buttonRestart = new JButton("RESTART");
+        JButton buttonRestart = new JButton(RESET);
         buttonRestart.addActionListener(gameLogic);
         buttonRestart.setFocusable(false);
 
-        JButton buttonCheck = new JButton("CHECK");
+        JButton buttonCheck = new JButton(CHECK);
         buttonCheck.addActionListener(gameLogic);
         buttonCheck.setFocusable(false);
-
 
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 8, 16, 8);
         slider.setMinorTickSpacing(2);
@@ -37,14 +38,14 @@ public class Game {
         slider.setPaintLabels(true);
         slider.addChangeListener(gameLogic);
 
-        sideMenu.setLayout(new GridLayout(2, 4));
-        sideMenu.add(buttonRestart);
-        sideMenu.add(gameLogic.getBoardSizeLabel());
-        sideMenu.add(slider);
-        sideMenu.add(buttonCheck);
-        sideMenu.add(gameLogic.getLevelLabel());
+        menu.setLayout(new GridLayout(2, 4));
+        menu.add(buttonRestart);
+        menu.add(gameLogic.getBoardSizeLabel());
+        menu.add(slider);
+        menu.add(buttonCheck);
+        menu.add(gameLogic.getLevelLabel());
 
-        frame.add(sideMenu, BorderLayout.PAGE_START);
+        frame.add(menu, BorderLayout.PAGE_START);
 
         frame.setVisible(true);
     }
