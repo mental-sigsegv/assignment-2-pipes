@@ -1,19 +1,16 @@
 package sk.stuba.fei.uim.oop.gameLogic;
 
 import lombok.Getter;
-import lombok.Setter;
 import sk.stuba.fei.uim.oop.board.*;
+import sk.stuba.fei.uim.oop.pipe.Pipe;
 import sk.stuba.fei.uim.oop.universalAdapter.UniversalAdapter;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Comparator;
 
 public class GameLogic extends UniversalAdapter {
     private Board board;
@@ -55,11 +52,11 @@ public class GameLogic extends UniversalAdapter {
     @Override
     public void mouseMoved(MouseEvent e) {
         Component component = board.getComponentAt(e.getX(), e.getY());
-        if (!(component instanceof Tile)) {
+        if (!(component instanceof Pipe)) {
             return;
         }
 
-        ((Tile) component).setHighlight(true);
+        ((Pipe) component).setHighlight(true);
         board.repaint();
 
     }
@@ -72,23 +69,23 @@ public class GameLogic extends UniversalAdapter {
     @Override
     public void mousePressed(MouseEvent e) {
         Component component = board.getComponentAt(e.getX(), e.getY());
-        if (!(component instanceof Tile)) {
+        if (!(component instanceof Pipe)) {
             return;
         }
 
-        ((Tile) component).setRotation((((Tile) component).getRotation() + 90)%360);
-        ((Tile) component).setHighlight(true);
-        ((Tile) component).repaint();
+        ((Pipe) component).setRotation((((Pipe) component).getRotation() + 90)%360);
+        ((Pipe) component).setHighlight(true);
+        ((Pipe) component).repaint();
     }
     @Override
     public void mouseClicked(MouseEvent e) {
         Component component = board.getComponentAt(e.getX(), e.getY());
-        if (!(component instanceof Tile)) {
+        if (!(component instanceof Pipe)) {
             return;
         }
 
-        ((Tile) component).setHighlight(true);
-        ((Tile) component).repaint();
+        ((Pipe) component).setHighlight(true);
+        ((Pipe) component).repaint();
     }
 
     @Override
@@ -136,17 +133,17 @@ public class GameLogic extends UniversalAdapter {
     private boolean check() {
         int tileX = board.getStartPos().get(0);
         int tileY = board.getStartPos().get(1);
-        Tile tile = board.getBoard()[tileX][tileY];
-        Tile nextTile;
+        Pipe pipe = board.getBoard()[tileX][tileY];
+        Pipe nextPipe;
         int nextTileX = tileX;
         int nextTileY = tileY;
 
         while (true) {
-            if ((tile.getEntry() == tile.getExit()) && (tileX != board.getStartPos().get(0) || tileY != board.getStartPos().get(1))) {
+            if ((pipe.getEntry() == pipe.getExit()) && (tileX != board.getStartPos().get(0) || tileY != board.getStartPos().get(1))) {
                 return true;
             }
 
-            switch (tile.getExit()) {
+            switch (pipe.getExit()) {
                 case LEFT:
                     nextTileY = tileY - 1;
                     break;
@@ -164,23 +161,23 @@ public class GameLogic extends UniversalAdapter {
                 return false;
             }
 
-            nextTile = board.getBoard()[nextTileX][nextTileY];
+            nextPipe = board.getBoard()[nextTileX][nextTileY];
 
-            if (nextTile.getType() == Type.EMPTY) {
+            if (nextPipe.getType() == Type.EMPTY) {
                 return false;
             }
 
-            Direction nextTileOppositeEntry = Direction.values()[(nextTile.getEntry().ordinal() + 2)%(Direction.values().length-1)];
-            Direction nextTileOppositeExit = Direction.values()[(nextTile.getExit().ordinal() + 2)%(Direction.values().length-1)];
-            if (tile.getExit() != nextTileOppositeEntry && tile.getExit() != nextTileOppositeExit) {
+            Direction nextTileOppositeEntry = Direction.values()[(nextPipe.getEntry().ordinal() + 2)%(Direction.values().length-1)];
+            Direction nextTileOppositeExit = Direction.values()[(nextPipe.getExit().ordinal() + 2)%(Direction.values().length-1)];
+            if (pipe.getExit() != nextTileOppositeEntry && pipe.getExit() != nextTileOppositeExit) {
                 return false;
-            } else if (tile.getExit() == nextTileOppositeExit) {
-                nextTile.swapEntryExit();
+            } else if (pipe.getExit() == nextTileOppositeExit) {
+                nextPipe.swapEntryExit();
             }
 
-            nextTile.setCompound(Compound.WATER);
+            nextPipe.setCompound(Compound.WATER);
 
-            tile = nextTile;
+            pipe = nextPipe;
             tileX = nextTileX;
             tileY = nextTileY;
         }

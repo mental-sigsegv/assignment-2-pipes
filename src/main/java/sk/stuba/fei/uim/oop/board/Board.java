@@ -1,6 +1,7 @@
 package sk.stuba.fei.uim.oop.board;
 
 import lombok.Getter;
+import sk.stuba.fei.uim.oop.pipe.Pipe;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -9,7 +10,7 @@ import java.util.*;
 
 public class Board extends JPanel {
     @Getter
-    private Tile[][] board;
+    private Pipe[][] board;
     private int[][] boardVisited;
     @Getter
     private ArrayList<ArrayList<Integer>> path;
@@ -138,7 +139,7 @@ public class Board extends JPanel {
     }
 
     private void initBoard(int size) {
-        board = new Tile[size][size];
+        board = new Pipe[size][size];
 
         setBackground(Color.WHITE);
         setBorder(new LineBorder(Color.BLACK, 2));
@@ -146,7 +147,7 @@ public class Board extends JPanel {
         setLayout(new GridLayout(size, size));
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
-                board[row][column] = new Tile();
+                board[row][column] = new Pipe();
                 board[row][column].setType(Type.EMPTY);
                 board[row][column].setPreferredSize(new Dimension(64, 64));
                 add(board[row][column]);

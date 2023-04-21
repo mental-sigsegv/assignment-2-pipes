@@ -1,9 +1,8 @@
-package sk.stuba.fei.uim.oop.board;
+package sk.stuba.fei.uim.oop.pipe;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.sound.sampled.Line;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -11,9 +10,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
+import sk.stuba.fei.uim.oop.board.Compound;
+import sk.stuba.fei.uim.oop.board.Direction;
 import sk.stuba.fei.uim.oop.board.Type;
 
-public class Tile extends JPanel {
+public class Pipe extends JPanel {
     @Setter
     private boolean highlight;
     @Setter @Getter
@@ -30,7 +31,7 @@ public class Tile extends JPanel {
     private ArrayList<Direction> directions;
     private final LineBorder defaultBorder;
     private final LineBorder highlightBorder;
-    public Tile() {
+    public Pipe() {
         defaultBorder = new LineBorder(Color.BLACK, 2);
         highlightBorder = new LineBorder(Color.RED, 2);
         type = Type.STRAIGHT_PIPE;
