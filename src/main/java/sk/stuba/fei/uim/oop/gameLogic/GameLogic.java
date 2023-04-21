@@ -126,6 +126,10 @@ public class GameLogic extends UniversalAdapter {
         mainFrame.revalidate();
         mainFrame.repaint();
     }
+    private void resetLevelCounter() {
+        level = 1;
+        updateLevelLabel();
+    }
     private void gameRestart() {
         mainFrame.remove(board);
         initializeNewBoard(boardSize);
@@ -142,6 +146,7 @@ public class GameLogic extends UniversalAdapter {
         board.addMouseListener(this);
     }
     private void updateLevelLabel() {
+        System.out.println(level);
         levelLabel.setText("CURRENT BOARD LEVEL: " + level);
         levelLabel.setHorizontalAlignment(SwingConstants.CENTER);
         levelLabel.setVerticalAlignment(SwingConstants.CENTER);
@@ -163,6 +168,7 @@ public class GameLogic extends UniversalAdapter {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_R:
                 gameRestart();
+                resetLevelCounter();
                 break;
             case KeyEvent.VK_ENTER:
                 check();
@@ -213,6 +219,7 @@ public class GameLogic extends UniversalAdapter {
         switch (buttonName) {
             case RESET:
                 gameRestart();
+                resetLevelCounter();
                 break;
             case CHECK:
                 check();
