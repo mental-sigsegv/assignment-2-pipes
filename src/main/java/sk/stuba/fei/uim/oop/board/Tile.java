@@ -9,6 +9,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 
 import sk.stuba.fei.uim.oop.board.Type;
 
@@ -17,12 +18,16 @@ public class Tile extends JPanel {
     private boolean highlight;
     @Setter @Getter
     private Type type;
+    @Setter
+    private Compound compound;
     @Setter @Getter
     private double rotation = 0.0;
     @Getter
     private Direction entry;
     @Getter
     private Direction exit;
+    @Getter
+    private ArrayList<Direction> directions;
     private final LineBorder defaultBorder;
     private final LineBorder highlightBorder;
     public Tile() {
@@ -30,8 +35,14 @@ public class Tile extends JPanel {
         highlightBorder = new LineBorder(Color.RED, 2);
         type = Type.STRAIGHT_PIPE;
         highlight = false;
-        entry = Direction.DOWN;
-        exit = Direction.RIGHT;
+        entry = Direction.EMPTY;
+        exit = Direction.EMPTY;
+
+        compound = Compound.AIR;
+
+        directions = new ArrayList<>();
+        directions.add(entry);
+        directions.add(exit);
     }
 
     public void paintComponent(Graphics g) {
@@ -43,7 +54,11 @@ public class Tile extends JPanel {
             setBackground(Color.GREEN);
         } else if (type.equals(Type.END)) {
             setBackground(Color.RED);
-        } else {
+        } else if (compound.equals(Compound.WATER)) {
+            setBackground(Color.blue);
+//            setCompound(Compound.AIR);
+        }
+        else {
             setBackground(Color.WHITE);
         }
 
@@ -66,10 +81,11 @@ public class Tile extends JPanel {
             entry = Direction.RIGHT;
         }
         transform.rotate(Math.toRadians(rotation),  (double) getWidth() /2, (double) getHeight() /2);
-//        System.out.println(entry);
-//        System.out.println((entry.ordinal() + (int) rotation/90)%Direction.values().length);
-        entry = Direction.values()[(entry.ordinal() + 1 + (int) rotation/90)%Direction.values().length];
-        exit = Direction.values()[(exit.ordinal() + 1 + (int) rotation/90)%Direction.values().length];
+
+        if (!type.equals(Type.EMPTY)) {
+            entry = Direction.values()[(entry.ordinal() + (int) rotation/90)%(Direction.values().length-1)];
+            exit = Direction.values()[(exit.ordinal() + (int) rotation/90)%(Direction.values().length-1)];
+        }
 
         Shape s = transform.createTransformedShape(shape);
         g2d.draw(s);
@@ -80,5 +96,12 @@ public class Tile extends JPanel {
         } else {
             setBorder(defaultBorder);
         }
+    }
+
+    public void swapEntryExit() {
+        Direction tmp;
+        tmp = entry;
+        entry = exit;
+        exit = tmp;
     }
 }

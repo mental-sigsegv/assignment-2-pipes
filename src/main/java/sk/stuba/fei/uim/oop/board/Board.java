@@ -1,22 +1,28 @@
 package sk.stuba.fei.uim.oop.board;
 
+import lombok.Getter;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.*;
 
 public class Board extends JPanel {
+    @Getter
     private Tile[][] board;
     private int[][] boardVisited;
-    private ArrayList<ArrayList<Integer>> test;
+    @Getter
+    private ArrayList<ArrayList<Integer>> path;
+    @Getter
     private ArrayList<Integer> startPos;
+    @Getter
     private ArrayList<Integer> endPos;
     private int boardSize;
     private boolean doSearch = true;
     public Board(int size) {
         boardSize = size;
         boardVisited = new int[size][size];
-        test = new ArrayList<>();
+        path = new ArrayList<>();
 
         startPos = new ArrayList<>();
         endPos = new ArrayList<>();
@@ -24,10 +30,10 @@ public class Board extends JPanel {
         initBoard(boardSize);
 
         int randomStart = (int) (Math.random() * boardSize);
-        int randomEnd = (int) (Math.random() * boardSize);
         startPos.add(randomStart);
         startPos.add(0);
 
+        int randomEnd = (int) (Math.random() * boardSize);
         endPos.add(randomEnd);
         endPos.add(boardSize-1);
 
@@ -41,9 +47,9 @@ public class Board extends JPanel {
     }
 
     private void updateBoard() {
-        for (int i=0; i<test.size(); i++) {
-            int xValue = test.get(i).get(0);
-            int yValue = test.get(i).get(1);
+        for (int i = 0; i< path.size(); i++) {
+            int xValue = path.get(i).get(0);
+            int yValue = path.get(i).get(1);
 
             int[] angleArray = {0, 90, 180, 270};
             int randomRotation = angleArray[(int) (Math.random() * angleArray.length)];
@@ -52,7 +58,7 @@ public class Board extends JPanel {
                 board[xValue][yValue].setRotation((board[xValue][yValue].getRotation() + randomRotation)%360);
                 continue;
             }
-            else if ((i > 0 && i < test.size() - 1) && (!Objects.equals(test.get(i - 1).get(0), test.get(i + 1).get(0)) && !Objects.equals(test.get(i - 1).get(1), test.get(i + 1).get(1)))) {
+            else if ((i > 0 && i < path.size() - 1) && (!Objects.equals(path.get(i - 1).get(0), path.get(i + 1).get(0)) && !Objects.equals(path.get(i - 1).get(1), path.get(i + 1).get(1)))) {
                 board[xValue][yValue].setType(Type.CURVED_PIPE);
             } else {
                 board[xValue][yValue].setType(Type.STRAIGHT_PIPE);
@@ -72,7 +78,7 @@ public class Board extends JPanel {
         boardVisited[startPos.get(0)][startPos.get(1)] = 0;
         boardVisited[endPos.get(0)][endPos.get(1)] = 0;
 
-        for (ArrayList<Integer> a : test) {
+        for (ArrayList<Integer> a : path) {
             int x = a.get(0);
             int y = a.get(1);
             boardVisited[x][y] = 0;
@@ -90,7 +96,7 @@ public class Board extends JPanel {
         ArrayList<Integer> tmp = new ArrayList<>();
         tmp.add(r);
         tmp.add(c);
-        test.add(tmp);
+        path.add(tmp);
 
         if (r == endPos.get(0) && c == endPos.get(1)) {
             doSearch = false;
@@ -127,8 +133,8 @@ public class Board extends JPanel {
 
             dfs(rr, cc);
         }
-        if (test.get(test.size() - 1).get(0) == r && test.get(test.size() - 1).get(1) == c) {
-            test.remove(test.size() - 1);
+        if (path.get(path.size() - 1).get(0) == r && path.get(path.size() - 1).get(1) == c) {
+            path.remove(path.size() - 1);
         }
     }
 

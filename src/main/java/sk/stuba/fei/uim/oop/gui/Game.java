@@ -37,7 +37,7 @@ public class Game {
         slider.setPaintLabels(true);
         slider.addChangeListener(gameLogic);
 
-        sideMenu.setLayout(new GridLayout(2, 4));
+        sideMenu.setLayout(new GridLayout(2, 4, 1, 1));
         sideMenu.add(buttonRestart);
         sideMenu.add(buttonCheck);
         sideMenu.add(gameLogic.getBoardSizeLabel());
