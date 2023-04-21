@@ -81,6 +81,7 @@ public class GameLogic extends UniversalAdapter {
     public void actionPerformed(ActionEvent e) {
         String buttonName = ((JButton) e.getSource()).getText();
         switch (buttonName) {
+            // TODO : replace string with static attributes
             case "RESTART":
                 gameRestart();
                 break;
@@ -106,8 +107,11 @@ public class GameLogic extends UniversalAdapter {
                 board.getBoard()[i][j].setCompound(Compound.AIR);
             }
         }
+        board.validate();
+        board.repaint();
     }
 
+    // TODO : implement better way of showing water path (just background is not clearly visible)
     private void check() {
         int tileX = board.getStartPos().get(0);
         int tileY = board.getStartPos().get(1);
@@ -116,6 +120,7 @@ public class GameLogic extends UniversalAdapter {
         int nextTileX = tileX;
         int nextTileY = tileY;
 
+        // TODO : remove system out print
         while (true) {
             if ((tile.getEntry() == tile.getExit()) && tileX != board.getStartPos().get(0) && tileY != board.getStartPos().get(1)) {
                 System.out.println("Path found");

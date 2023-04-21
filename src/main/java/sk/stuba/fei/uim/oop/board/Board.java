@@ -37,7 +37,6 @@ public class Board extends JPanel {
         endPos.add(randomEnd);
         endPos.add(boardSize-1);
 
-        System.out.println("S: " + randomStart + " | E:" + randomEnd);
 
         initStart(randomStart, 0);
         initEnd(randomEnd, boardSize-1);

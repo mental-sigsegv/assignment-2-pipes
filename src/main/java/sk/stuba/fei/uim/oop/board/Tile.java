@@ -45,6 +45,7 @@ public class Tile extends JPanel {
         directions.add(exit);
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
@@ -62,25 +63,29 @@ public class Tile extends JPanel {
             setBackground(Color.WHITE);
         }
 
+        // TODO : divide pipes into subclasses with proper pain method and override entry/end attribute
         AffineTransform transform = new AffineTransform();
         Rectangle2D shape = new Rectangle2D.Double(0, 0, 0, 0);
         Dimension size = getSize();
         if (type.equals(Type.STRAIGHT_PIPE)) {
             shape = new Rectangle2D.Double(0, size.height / 2 - 1, size.width, 3);
+
             entry = Direction.LEFT;
             exit = Direction.RIGHT;
         } else if (type.equals(Type.CURVED_PIPE)) {
             shape = new Rectangle2D.Double( size.width/2, size.height / 2 - 1, size.width, 3);
             Rectangle2D tmp = new Rectangle2D.Double( size.width/2 - 1, size.width/2 + 1, 3, size.height / 2);
             shape.add(tmp);
+
             entry = Direction.DOWN;
             exit = Direction.RIGHT;
         } else if (type.equals(Type.END) || type.equals(Type.START)) {
+
             shape = new Rectangle2D.Double( size.width/2, size.height / 2 - 1, size.width, 3);
             exit = Direction.RIGHT;
             entry = Direction.RIGHT;
         }
-        transform.rotate(Math.toRadians(rotation),  (double) getWidth() /2, (double) getHeight() /2);
+        transform.rotate(Math.toRadians(rotation),  (double) this.getWidth() /2, (double) this.getHeight() /2);
 
         if (!type.equals(Type.EMPTY)) {
             entry = Direction.values()[(entry.ordinal() + (int) rotation/90)%(Direction.values().length-1)];
@@ -89,6 +94,7 @@ public class Tile extends JPanel {
 
         Shape s = transform.createTransformedShape(shape);
         g2d.draw(s);
+        g2d.setColor(Color.BLACK);
 
         if (highlight) {
             setBorder(highlightBorder);
