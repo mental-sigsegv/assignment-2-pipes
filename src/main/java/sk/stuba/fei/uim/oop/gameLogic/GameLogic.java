@@ -116,13 +116,7 @@ public class GameLogic extends UniversalAdapter {
         int nextTileX = tileX;
         int nextTileY = tileY;
 
-        int c = 0;
         while (true) {
-            System.out.println(c + ". " + tileX + " " + tileY);
-            c++;
-            if (c > 50) {
-                break;
-            }
             if ((tile.getEntry() == tile.getExit()) && tileX != board.getStartPos().get(0) && tileY != board.getStartPos().get(1)) {
                 System.out.println("Path found");
                 break;
@@ -146,7 +140,14 @@ public class GameLogic extends UniversalAdapter {
                 System.out.println("Path out of board. 404 not found");
                 break;
             }
+
             nextTile = board.getBoard()[nextTileX][nextTileY];
+
+            if (nextTile.getType() == Type.EMPTY) {
+                System.out.println("Empty tile");
+                break;
+            }
+
             Direction nextTileOppositeEntry = Direction.values()[(nextTile.getEntry().ordinal() + 2)%(Direction.values().length-1)];
             Direction nextTileOppositeExit = Direction.values()[(nextTile.getExit().ordinal() + 2)%(Direction.values().length-1)];
             if (tile.getExit() != nextTileOppositeEntry && tile.getExit() != nextTileOppositeExit) {
@@ -157,6 +158,7 @@ public class GameLogic extends UniversalAdapter {
             } else if (tile.getExit() == nextTileOppositeExit) {
                 nextTile.swapEntryExit();
             }
+
             nextTile.setCompound(Compound.WATER);
 
             tile = nextTile;
