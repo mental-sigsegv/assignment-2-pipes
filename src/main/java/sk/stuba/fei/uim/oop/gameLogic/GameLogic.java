@@ -160,6 +160,7 @@ public class GameLogic extends UniversalAdapter {
     public void stateChanged(ChangeEvent e) {
         boardSize = ((JSlider) e.getSource()).getValue();
         updateBoardSizeLabel();
+        resetLevelCounter();
         gameRestart();
     }
     @Override
