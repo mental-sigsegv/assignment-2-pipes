@@ -146,7 +146,6 @@ public class GameLogic extends UniversalAdapter {
         board.addMouseListener(this);
     }
     private void updateLevelLabel() {
-        System.out.println(level);
         levelLabel.setText("CURRENT BOARD LEVEL: " + level);
         levelLabel.setHorizontalAlignment(SwingConstants.CENTER);
         levelLabel.setVerticalAlignment(SwingConstants.CENTER);

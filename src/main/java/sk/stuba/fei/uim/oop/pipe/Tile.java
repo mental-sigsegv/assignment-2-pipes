@@ -37,8 +37,6 @@ public abstract class Tile extends JPanel {
         state = State.AIR;
         highlight = false;
 
-
-
         initBorders();
         initEntrances();
     }
