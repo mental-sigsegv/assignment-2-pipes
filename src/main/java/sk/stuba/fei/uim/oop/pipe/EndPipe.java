@@ -9,7 +9,6 @@ public class EndPipe extends Tile {
     public EndPipe() {
         super();
         setBackground(Color.RED);
-        setType(Type.END);
         repaint();
     }
 

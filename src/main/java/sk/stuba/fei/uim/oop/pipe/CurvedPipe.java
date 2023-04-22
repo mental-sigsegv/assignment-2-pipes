@@ -9,7 +9,6 @@ public class CurvedPipe extends Tile {
     public CurvedPipe() {
         super();
         setBackground(Color.WHITE);
-        setType(Type.CURVED_PIPE);
         repaint();
     }
     @Override

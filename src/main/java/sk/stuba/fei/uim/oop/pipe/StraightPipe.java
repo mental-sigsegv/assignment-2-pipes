@@ -9,7 +9,6 @@ public class StraightPipe extends Tile {
     public StraightPipe() {
         super();
         setBackground(Color.WHITE);
-        setType(Type.STRAIGHT_PIPE);
         repaint();
     }
 

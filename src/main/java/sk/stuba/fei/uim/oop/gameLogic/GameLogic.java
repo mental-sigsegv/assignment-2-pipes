@@ -2,9 +2,9 @@ package sk.stuba.fei.uim.oop.gameLogic;
 
 import lombok.Getter;
 import sk.stuba.fei.uim.oop.board.*;
+import sk.stuba.fei.uim.oop.pipe.Empty;
 import sk.stuba.fei.uim.oop.pipe.State;
 import sk.stuba.fei.uim.oop.pipe.Tile;
-import sk.stuba.fei.uim.oop.pipe.Type;
 import sk.stuba.fei.uim.oop.universalAdapter.UniversalAdapter;
 
 import javax.swing.*;
@@ -99,7 +99,7 @@ public class GameLogic extends UniversalAdapter {
 
             nextTile = board.getBoard()[nextTileX][nextTileY];
 
-            if (nextTile.getType() == Type.EMPTY) {
+            if (nextTile instanceof Empty) {
                 return false;
             }
 

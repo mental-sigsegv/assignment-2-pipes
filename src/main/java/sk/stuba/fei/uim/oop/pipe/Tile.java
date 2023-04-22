@@ -15,8 +15,6 @@ import sk.stuba.fei.uim.oop.board.Direction;
 public abstract class Tile extends JPanel {
     @Setter
     private boolean highlight;
-    @Setter @Getter
-    private Type type;
     @Setter
     protected State state;
     @Setter @Getter
@@ -33,7 +31,6 @@ public abstract class Tile extends JPanel {
     protected Dimension size;
     protected AffineTransform transform;
     public Tile() {
-        type = Type.EMPTY;
         state = State.AIR;
         highlight = false;
 
@@ -60,7 +57,7 @@ public abstract class Tile extends JPanel {
         transform.rotate(Math.toRadians(rotation),  getWidth() / 2.0, getHeight() / 2.0);
     }
     protected void rotatePipe() {
-        if (!type.equals(Type.EMPTY)) {
+        if (!(this instanceof Empty)) {
             entry = Direction.values()[(entry.ordinal() + (int) rotation/90)%(Direction.values().length-1)];
             exit = Direction.values()[(exit.ordinal() + (int) rotation/90)%(Direction.values().length-1)];
         }
